@@ -1,0 +1,14 @@
+<RCC>
+    <qresource prefix="/">
+        <file>icon/refresh.png</file>
+        <file>icon/wifi-signal.png</file>
+        <file>icon/info.png</file>
+        <file>icon/play-button.png</file>
+        <file>icon/search.png</file>
+        <file>icon/back.png</file>
+        <file>qml/Info.qml</file>
+        <file>qml/main.qml</file>
+        <file>qml/Servers.qml</file>
+        <file>qml/TvShow.qml</file>
+    </qresource>
+</RCC>
