@@ -23,6 +23,13 @@ void TvShow::now()
     this->clearList();
 }
 
+void TvShow::filter(QString str)
+{
+    foreach (QObject* obj, this->m_list) {
+        ((Item*)obj)->filter(str.toUpper());
+    }
+}
+
 void TvShow::finished(QNetworkReply *reply)
 {
     if (reply->error()) {
@@ -43,8 +50,8 @@ void TvShow::finished(QNetworkReply *reply)
 
             QString title = obj["title"].toString();
             QString desc = obj["desc"].toString();
-            QDateTime start = QDateTime::fromMSecsSinceEpoch(obj["start"].toDouble());
-            QDateTime end = QDateTime::fromMSecsSinceEpoch(obj["end"].toDouble());
+            QDateTime start = (QDateTime::fromMSecsSinceEpoch(obj["start"].toDouble())).addSecs(10800);
+            QDateTime end = (QDateTime::fromMSecsSinceEpoch(obj["end"].toDouble())).addSecs(10800);
 
             this->m_list.append(new Item(channel, net, start, end, title, desc));
             emit listChanged();

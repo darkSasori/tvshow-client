@@ -7,7 +7,7 @@
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
-    TvShow tvShow("http://localhost:8080/v1");
+    TvShow tvShow("http://tvshow-lineufelipe.rhcloud.com/v1");
     UdpSocket udpSocket(5555);
 
     QQmlApplicationEngine engine;

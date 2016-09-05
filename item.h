@@ -14,8 +14,11 @@ class Item : public QObject
     Q_PROPERTY(QDateTime end READ end WRITE setEnd NOTIFY endChanged)
     Q_PROPERTY(QString title READ title WRITE setTitle NOTIFY titleChanged)
     Q_PROPERTY(QString desc READ desc WRITE setDesc NOTIFY descChanged)
+    Q_PROPERTY(bool visible READ visible WRITE setVisible NOTIFY visibleChanged)
 public:
     explicit Item(QString channel, int net, QDateTime start, QDateTime end, QString title, QString desc, QObject *parent = 0);
+
+    Q_INVOKABLE QString period();
 
     QString channel();
     void setChannel(QString channel);
@@ -35,6 +38,11 @@ public:
     QString desc();
     void setDesc(QString desc);
 
+    bool visible();
+    void setVisible(bool visible);
+
+    void filter(QString q);
+
 signals:
     void channelChanged();
     void netChanged();
@@ -42,6 +50,7 @@ signals:
     void endChanged();
     void titleChanged();
     void descChanged();
+    void visibleChanged();
 
 public slots:
 
@@ -52,6 +61,7 @@ private:
     QDateTime m_end;
     QString m_title;
     QString m_desc;
+    bool m_visible;
 };
 
 #endif // ITEM_H

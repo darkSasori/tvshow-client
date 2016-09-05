@@ -13,9 +13,16 @@ Item::Item(QString channel,
              m_start(start),
              m_end(end),
              m_title(title),
-             m_desc(desc)
+             m_desc(desc),
+             m_visible(true)
 {
-//    this->m_start.setTimeZone(QTimeZone::utc());
+}
+
+QString Item::period()
+{
+    return this->m_start.toString("dd/MM/yyyy hh:mm")
+            + " to "
+            + this->m_end.toString("dd/MM/yyyy hh:mm");
 }
 
 QString Item::channel()
@@ -82,4 +89,24 @@ void Item::setDesc(QString desc)
 {
     this->m_desc = desc;
     emit descChanged();
+}
+
+bool Item::visible()
+{
+    return this->m_visible;
+}
+
+void Item::setVisible(bool visible)
+{
+    this->m_visible = visible;
+    emit visibleChanged();
+}
+
+void Item::filter(QString q)
+{
+    if (q.isEmpty()) {
+        this->setVisible(true);
+        return;
+    }
+    this->setVisible(this->m_channel.toUpper().contains(q) || this->m_title.toUpper().contains(q));
 }

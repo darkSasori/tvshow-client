@@ -49,7 +49,8 @@ ApplicationWindow {
                         border.width: 1
                     }
                 }
-                Keys.onReturnPressed: {
+                Keys.onReleased: {
+                    tvshow.filter(search.text);
                 }
             }
 

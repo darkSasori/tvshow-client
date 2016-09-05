@@ -10,5 +10,6 @@
         <file>qml/main.qml</file>
         <file>qml/Servers.qml</file>
         <file>qml/TvShow.qml</file>
+        <file>qml/Search.qml</file>
     </qresource>
 </RCC>

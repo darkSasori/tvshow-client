@@ -17,6 +17,7 @@ public:
     explicit TvShow(QString m_url, QObject *parent = 0);
 
     Q_INVOKABLE void now();
+    Q_INVOKABLE void filter(QString str);
 
     QList<QObject*> list();
     void setList(QList<QObject*> list);

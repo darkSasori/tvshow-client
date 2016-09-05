@@ -10,8 +10,10 @@ Item {
         }
         delegate: Item {
             x: 5
-            width: parent.width
-            height: 40
+            width: model.modelData.visible ? parent.width : 0
+            height: model.modelData.visible ? 40 : 0
+            visible: model.modelData.visible
+
             Row {
                 anchors.topMargin: 10
                 anchors.rightMargin: 10
