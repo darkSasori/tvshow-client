@@ -14,10 +14,11 @@ ApplicationWindow {
     property int listViewActive: 1
 
     toolBar: ToolBar {
-        height: 31
+        height: icon.implicitHeight
         RowLayout {
             anchors.fill: parent
             ToolButton {
+                id: icon
                 iconName: "Servers"
                 iconSource: "../icon/wifi-signal.png"
                 onClicked: {
@@ -35,31 +36,24 @@ ApplicationWindow {
                 }
             }
 
-            TextField {
-                id: search
-                height: parent.height
-                width: 150
-                style: TextFieldStyle {
-                    background: Rectangle {
-                        color: "white"
-                        radius: 5
-                        implicitWidth: parent.parent.width
-                        implicitHeight: parent.parent.height
-                        border.color: "#333"
-                        border.width: 1
-                    }
-                }
-                Keys.onReleased: {
-                    tvshow.filter(search.text);
-                }
-            }
-
-            ToolButton {
-                iconSource: "../icon/search.png"
-                onClicked: {
-                }
-            }
-
+//            TextField {
+//                id: search
+//                height: parent.height
+//                Layout.fillWidth: true
+//                style: TextFieldStyle {
+//                    background: Rectangle {
+//                        color: "white"
+//                        radius: 5
+//                        implicitWidth: parent.parent.width
+//                        implicitHeight: parent.parent.height
+//                        border.color: "#333"
+//                        border.width: 1
+//                    }
+//                }
+//                Keys.onReleased: {
+//                    tvshow.filter(search.text);
+//                }
+//            }
 
             Item {
                 Layout.fillWidth: true
