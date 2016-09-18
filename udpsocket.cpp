@@ -10,6 +10,9 @@ UdpSocket::UdpSocket(quint16 port, QObject *parent)
 
     this->initializeList();
     this->setCurrent(this->m_list[0]);
+    this->setOperator("NET");
+
+    this->refresh();
 }
 
 void UdpSocket::refresh()
@@ -20,11 +23,14 @@ void UdpSocket::refresh()
     this->m_sock->writeDatagram(data, QHostAddress::Broadcast, this->m_port);
 }
 
-void UdpSocket::play(int net)
+void UdpSocket::play(Item *item)
 {
-    qDebug() << net;
+#ifdef QT_DEBUG
+    qDebug() << this->current();
+    qDebug() << item->getChannelNumber()[this->getOperator()];
+#endif
     QByteArray data("c;");
-    data += QString::number(net);
+    data += QString::number(item->getChannelNumber()[this->getOperator()]);
     this->m_sock->writeDatagram(data, QHostAddress::Broadcast, this->m_port);
 }
 
@@ -72,3 +78,13 @@ void UdpSocket::setCurrent(QObject *current)
     emit currentChanged();
 }
 
+QString UdpSocket::getOperator()
+{
+    return this->m_operator;
+}
+
+void UdpSocket::setOperator(QString operatorName)
+{
+    this->m_operator = operatorName;
+    emit operatorChanged();
+}

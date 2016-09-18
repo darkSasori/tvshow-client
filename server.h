@@ -30,8 +30,8 @@ signals:
 public slots:
 
 private:
-    QString m_name;
     QHostAddress m_host;
+    QString m_name;
     quint16 m_port;
 };
 

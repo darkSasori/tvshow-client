@@ -34,6 +34,8 @@ signals:
     void listChanged();
     void countChanged();
     void currentItemChanged();
+    void startLoading();
+    void endLoading();
 
 public slots:
     void finished(QNetworkReply *reply);
@@ -44,6 +46,7 @@ private:
     int m_count;
     QNetworkAccessManager *manager;
     QObject *m_currentItem;
+    bool m_loading;
 };
 
 #endif // TVSHOW_H

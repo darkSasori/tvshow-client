@@ -1,6 +1,6 @@
 TEMPLATE = app
 
-QT += qml quick widgets
+QT += qml quick widgets quickcontrols2
 
 CONFIG += c++11
 
@@ -23,3 +23,5 @@ HEADERS += \
     tvshow.h \
     udpsocket.h \
     server.h
+
+DISTFILES +=

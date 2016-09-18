@@ -1,7 +1,5 @@
-import QtQuick 2.5
-import QtQuick.Controls 1.4
-import QtQuick.Controls.Styles 1.4
-import QtQml.Models 2.2
+import QtQuick 2.0
+import QtQuick.Controls 2.0
 import QtQuick.Layouts 1.1
 
 ApplicationWindow {
@@ -10,99 +8,85 @@ ApplicationWindow {
     width: 640
     height: 480
     title: qsTr("Desktop Controller Client (" + tvshow.count + ")")
+    property bool loading: false
 
-    property int listViewActive: 1
+    header: ToolBar {
+        id: header
+        ToolButton {
+            id: backButton
+            width: opacity ? 60 : 0
+            Behavior on opacity { NumberAnimation{} }
+            opacity: stackMain.depth > 1 && !loading ? 1 : 0
+            Image {
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.horizontalCenter: parent.horizontalCenter
+                source: "../icon/arrow_back.png"
+            }
+            onClicked: {
+                stackMain.pop()
+            }
+        }
 
-    toolBar: ToolBar {
-        height: icon.implicitHeight
-        RowLayout {
-            anchors.fill: parent
-            ToolButton {
-                id: icon
-                iconName: "Servers"
-                iconSource: "../icon/wifi-signal.png"
-                onClicked: {
-                    udpsocket.refresh();
-                    root.currentIndex = 0
-                }
+        Text {
+            Behavior on x { NumberAnimation{ easing.type: Easing.OutCubic} }
+            x: backButton.x + backButton.width + 20
+            anchors.verticalCenter: parent.verticalCenter
+            color: "white"
+            text: main.title
+        }
+    }
+
+    StackView {
+        id: stackMain
+        anchors.fill: parent
+        initialItem: swipe
+        anchors.margins: 10
+
+        SwipeView {
+            id: swipe
+            currentIndex: 1
+            spacing: 10
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.horizontalCenter: parent.horizontalCenter
+
+            Servers {
+                listServers: udpsocket.list
             }
 
-            ToolButton {
-                iconName: "Refresh"
-                iconSource: "../icon/refresh.png"
-                onClicked: {
-                    tvshow.now()
-                    root.currentIndex = 1
-                }
+            TvShow {
+                id: tvShowList
+                listTvShows: tvshow.list
             }
+        }
 
-//            TextField {
-//                id: search
-//                height: parent.height
-//                Layout.fillWidth: true
-//                style: TextFieldStyle {
-//                    background: Rectangle {
-//                        color: "white"
-//                        radius: 5
-//                        implicitWidth: parent.parent.width
-//                        implicitHeight: parent.parent.height
-//                        border.color: "#333"
-//                        border.width: 1
-//                    }
-//                }
-//                Keys.onReleased: {
-//                    tvshow.filter(search.text);
-//                }
-//            }
+    }
 
-            Item {
-                Layout.fillWidth: true
-            }
-
-            Text {
-                Layout.alignment: Qt.AlignRight
-                text: qsTr("Send to:")
-                font.bold: true
-            }
-
-            Text {
-                Layout.alignment: Qt.AlignRight
-                text: udpsocket.current.name
+    Component {
+        id: componentLoading
+        Item {
+            BusyIndicator {
+                id: busy
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.horizontalCenter: parent.horizontalCenter
             }
         }
     }
 
-    ListView {
-        id: root
-        anchors.fill: parent
-        snapMode: ListView.SnapOneItem
-        highlightRangeMode: ListView.StrictlyEnforceRange
-        highlightMoveDuration: 250
-        focus: false
-        orientation: ListView.Horizontal
-        boundsBehavior: Flickable.StopAtBounds
-        currentIndex: listViewActive
-        onCurrentIndexChanged: {
+    Component {
+        id: info
+        Info {
         }
+    }
 
-        model: ObjectModel{
-            Servers {
-                width: root.width
-                height: root.height
-                listServers.model: udpsocket.list
-            }
-
-            TvShow {
-                width: root.width
-                height: root.height
-                listTvShows.model: tvshow.list
-            }
-
-            Info {
-                id: info
-                width: root.width
-                height: root.height
-            }
+    Connections{
+        target: tvshow
+        onStartLoading: {
+            loading = true
+            stackMain.push(componentLoading)
+        }
+        onEndLoading: {
+            loading = false
+            stackMain.pop();
         }
     }
 }

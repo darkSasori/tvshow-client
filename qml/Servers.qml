@@ -1,7 +1,7 @@
 import QtQuick 2.0
 
 Item {
-    property alias listServers: listServers
+    property alias listServers: listServers.model
     ListView {
         id: listServers
         anchors.fill: parent
@@ -22,14 +22,18 @@ Item {
                     font.bold: true
                     anchors.verticalCenter: parent.verticalCenter
 
+                }
+            }
                     MouseArea {
                         anchors.fill: parent
                         onClicked: {
                             udpsocket.current = model.modelData
-                            root.currentIndex = 1
                         }
                     }
-                }
+        }
+        onMovementEnded: {
+            if (listServers.contentY <= 0) {
+                udpsocket.refresh();
             }
         }
     }

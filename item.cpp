@@ -1,7 +1,7 @@
 #include "item.h"
 
 Item::Item(QString channel,
-           int net,
+           ChannelNumber numbers,
            QDateTime start,
            QDateTime end,
            QString title,
@@ -9,12 +9,12 @@ Item::Item(QString channel,
            QObject *parent)
            : QObject(parent),
              m_channel(channel),
-             m_net(net),
              m_start(start),
              m_end(end),
              m_title(title),
              m_desc(desc),
-             m_visible(true)
+             m_visible(true),
+             channelNumber(numbers)
 {
 }
 
@@ -34,17 +34,6 @@ void Item::setChannel(QString channel)
 {
     this->m_channel = channel;
     emit channelChanged();
-}
-
-int Item::net()
-{
-    return this->m_net;
-}
-
-void Item::setNet(int net)
-{
-    this->m_net = net;
-    emit netChanged();
 }
 
 QDateTime Item::start()
@@ -109,4 +98,9 @@ void Item::filter(QString q)
         return;
     }
     this->setVisible(this->m_channel.toUpper().contains(q) || this->m_title.toUpper().contains(q));
+}
+
+ChannelNumber Item::getChannelNumber()
+{
+    return this->channelNumber;
 }

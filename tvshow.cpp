@@ -13,13 +13,13 @@ TvShow::TvShow(QString url, QObject *parent)
     connect(this->manager, SIGNAL(finished(QNetworkReply*)),
             this, SLOT(finished(QNetworkReply*)));
 
-
     this->now();
 }
 
 void TvShow::now()
 {
-    QNetworkReply *reply = this->manager->get(QNetworkRequest(QUrl(this->m_url+"/now")));
+    emit startLoading();
+    this->manager->get(QNetworkRequest(QUrl(this->m_url+"/now")));
     this->clearList();
 }
 
@@ -32,33 +32,40 @@ void TvShow::filter(QString str)
 
 void TvShow::finished(QNetworkReply *reply)
 {
-    if (reply->error()) {
-        qDebug() << "Error: " << reply->errorString();
-    }
-    else {
+    if (!reply->error()) {
         QJsonDocument response = QJsonDocument::fromJson(reply->readAll());
         QJsonObject root = response.object();
         this->setCount(root["count"].toInt());
 
         QJsonArray items = root["items"].toArray();
-        for (QJsonArray::iterator it = items.begin(); it != items.end(); it++) {
-            QJsonObject obj = (*it).toObject();
+        for (auto it:items) {
+            QJsonObject obj = it.toObject();
             QJsonObject objChannel = obj["channel_id"].toObject();
 
+            ChannelNumber numbers;
             QString channel = objChannel["title"].toString();
-            int net = objChannel["numbers"].toObject()["NET"].toInt();
+            auto channelNumbers = objChannel["numbers"].toObject();
+            for (auto ch : channelNumbers.keys()) {
+                numbers[ch] = channelNumbers[ch].toInt();
+            }
 
             QString title = obj["title"].toString();
             QString desc = obj["desc"].toString();
             QDateTime start = (QDateTime::fromMSecsSinceEpoch(obj["start"].toDouble())).addSecs(10800);
             QDateTime end = (QDateTime::fromMSecsSinceEpoch(obj["end"].toDouble())).addSecs(10800);
 
-            this->m_list.append(new Item(channel, net, start, end, title, desc));
+            this->m_list.append(new Item(channel, numbers, start, end, title, desc));
             emit listChanged();
         }
     }
+#ifdef QT_DEBUG
+    else {
+        qDebug() << "Error: " << reply->errorString();
+    }
+#endif
 
     reply->deleteLater();
+    emit endLoading();
 }
 
 QList<QObject*> TvShow::list()
