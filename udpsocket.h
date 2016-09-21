@@ -2,11 +2,18 @@
 #define UDPSOCKET_H
 
 #include <QObject>
+#include <QDataStream>
 #include <QUdpSocket>
 #include "server.h"
 #include "item.h"
 
 typedef QList<Server*> ServerList;
+
+typedef struct {
+    char cmd;
+    int number;
+} command;
+
 class UdpSocket : public QObject
 {
     Q_OBJECT

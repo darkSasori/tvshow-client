@@ -25,13 +25,33 @@ void UdpSocket::refresh()
 
 void UdpSocket::play(Item *item)
 {
+    int channel = item->getChannelNumber()[this->getOperator()];
+
+    command cmd;
+    cmd.cmd = 'c';
+    cmd.number = channel;
+
+    char stream[sizeof(command)];
+    memcpy(stream, &cmd, sizeof(command));
+
+    QByteArray data(stream);
+    QByteArray d2("c");
+    d2 += QString::number(channel);
+
 #ifdef QT_DEBUG
     qDebug() << this->current();
     qDebug() << item->getChannelNumber()[this->getOperator()];
+    qDebug() << "Cmd: " << cmd.cmd << "; Channel: " << cmd.number;
+    qDebug() << "Stream: " << stream << "; Size: " << sizeof(stream);
+    qDebug() << "Size: " << data.size() << "; Data: " << data.data();
+    qDebug() << "Size ByteArray: " << d2.size();
 #endif
-    QByteArray data("c;");
-    data += QString::number(item->getChannelNumber()[this->getOperator()]);
-    this->m_sock->writeDatagram(data, QHostAddress::Broadcast, this->m_port);
+
+    quint16 s = this->m_sock->writeDatagram(data, QHostAddress::Broadcast, this->m_port);
+
+#ifdef QT_DEBUG
+    qDebug() << "Sent: " << s;
+#endif
 }
 
 void UdpSocket::readyRead()
