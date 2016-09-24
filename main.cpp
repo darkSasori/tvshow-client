@@ -1,7 +1,7 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
-#include <QQuickStyle>
+//#include <QQuickStyle>
 #include "tvshow.h"
 #include "udpsocket.h"
 
@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
 #endif
     UdpSocket udpSocket(5555);
 
-    QQuickStyle::setStyle("Material");
+//    QQuickStyle::setStyle("Material");
 
     QQmlApplicationEngine engine;
     QQmlContext *context = engine.rootContext();
