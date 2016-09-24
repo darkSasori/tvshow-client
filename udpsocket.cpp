@@ -35,16 +35,13 @@ void UdpSocket::play(Item *item)
     memcpy(stream, &cmd, sizeof(command));
 
     QByteArray data(stream);
-    QByteArray d2("c");
-    d2 += QString::number(channel);
 
 #ifdef QT_DEBUG
     qDebug() << this->current();
     qDebug() << item->getChannelNumber()[this->getOperator()];
-    qDebug() << "Cmd: " << cmd.cmd << "; Channel: " << cmd.number;
-    qDebug() << "Stream: " << stream << "; Size: " << sizeof(stream);
-    qDebug() << "Size: " << data.size() << "; Data: " << data.data();
-    qDebug() << "Size ByteArray: " << d2.size();
+    qDebug() << "Int " << sizeof(int);
+    qDebug() << "Char " << sizeof(char);
+    qDebug() << "Command " << sizeof(command);
 #endif
 
     quint16 s = this->m_sock->writeDatagram(data, QHostAddress::Broadcast, this->m_port);
